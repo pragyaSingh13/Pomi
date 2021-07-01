@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.slideshow.SlideshowFragment">
+
+    <EditText
+        android:id="@+id/editTextTextPersonName3"
+        android:layout_width="230dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="188dp"
+        android:background="@drawable/listbackground"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.154"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonsave2"
+        android:layout_width="67dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="76dp"
+        android:layout_marginBottom="188dp"
+        android:background="@drawable/smoothbutton"
+        android:text="SAVE"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImageView6"
+        android:layout_width="291dp"
+        android:layout_height="397dp"
+        android:layout_marginStart="208dp"
+        android:layout_marginTop="460dp"
+        android:src="@drawable/fight"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/longList"
+        android:layout_width="350dp"
+        android:layout_height="502dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="77dp"
+        android:background="@drawable/listbackground"
+        app:layout_constraintBottom_toTopOf="@+id/gifImageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.095" />
+
+    <Button
+        android:id="@+id/infobutton"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="111dp"
+        android:layout_marginBottom="143dp"
+        android:background="@drawable/info"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gifImageView6"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/longList"
+        app:layout_constraintVertical_bias="1.0" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
