@@ -9,7 +9,9 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.NoActionBar">
-        <activity android:name=".longInfo"></activity>
+        <activity android:name=".Register"></activity>
+        <activity android:name=".LogIn" />
+        <activity android:name=".longInfo" />
         <activity android:name=".shortInfo" />
         <activity
             android:name=".home"
