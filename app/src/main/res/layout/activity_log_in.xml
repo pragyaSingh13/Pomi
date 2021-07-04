@@ -23,51 +23,43 @@
         android:id="@+id/editTextTextPersonName5"
         android:layout_width="296dp"
         android:layout_height="54dp"
-        android:layout_marginStart="57dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginBottom="336dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/listbackground"
         android:ems="10"
         android:hint="Enter Password"
         android:inputType="textPassword"
         android:textColorHint="#CFCFCF"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName4"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName4" />
 
     <EditText
         android:id="@+id/editTextTextPersonName4"
         android:layout_width="296dp"
         android:layout_height="57dp"
-        android:layout_marginStart="57dp"
-        android:layout_marginTop="252dp"
+        android:layout_marginTop="132dp"
         android:background="@drawable/listbackground"
         android:ems="10"
         android:hint="Enter E-mail"
         android:inputType="textPersonName"
         android:textColorHint="#CFCFCF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonsave4"
         android:layout_width="127dp"
         android:layout_height="51dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="188dp"
+        android:layout_marginTop="79dp"
         android:background="@drawable/smoothbutton"
         android:text="LOG IN"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName5"
-        app:layout_constraintVertical_bias="0.507" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName5" />
 
     <TextView
         android:id="@+id/textView7"
