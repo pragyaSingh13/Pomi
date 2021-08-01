@@ -7,6 +7,21 @@
     tools:context=".Register">
 
     <EditText
+        android:id="@+id/username"
+        android:layout_width="296dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/listbackground"
+        android:ems="10"
+        android:hint="Enter Username"
+        android:inputType="textPersonName"
+        android:textColorHint="#99CFC9C9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+    <EditText
         android:id="@+id/pass1"
         android:layout_width="296dp"
         android:layout_height="54dp"
@@ -38,7 +53,7 @@
         android:id="@+id/email1"
         android:layout_width="296dp"
         android:layout_height="57dp"
-        android:layout_marginTop="135dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/listbackground"
         android:ems="10"
         android:hint="Enter E-mail"
@@ -47,15 +62,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonlogin"
+        android:id="@+id/signup"
         android:layout_width="127dp"
         android:layout_height="51dp"
         android:layout_marginTop="90dp"
         android:background="@drawable/smoothbutton"
-        android:onClick="clicked"
         android:text="Sign Up"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,14 +87,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pass1" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/signinbtn"
-        android:layout_width="256dp"
-        android:layout_height="68dp"
-        android:layout_marginTop="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonlogin"
-        android:onClick="googleClick"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
