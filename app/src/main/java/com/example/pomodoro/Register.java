@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pomodoro.ui.User;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
@@ -31,6 +32,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.jetbrains.annotations.NotNull;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
@@ -96,5 +100,29 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         passt.requestFocus();
         return;
     }
+
+    mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        @Override
+        public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+            if(task.isSuccessful()){
+                User user = new User(username,email);
+
+                FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(Register.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(Register.this, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+            } else{
+                Toast.makeText(Register.this, "Oops! Something went wrong!" + task.toString(), Toast.LENGTH_LONG).show();
+            }
+        }
+    });
     }
 }

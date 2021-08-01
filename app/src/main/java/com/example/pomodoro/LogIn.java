@@ -30,5 +30,14 @@ FirebaseAuth auth;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        signup = findViewById(R.id.textView9);
+
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LogIn.this, Register.class));
+            }
+        });
+
     }
 }
