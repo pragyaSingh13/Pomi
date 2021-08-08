@@ -8,6 +8,7 @@ import android.os.Handler;
 
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -17,7 +18,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FirebaseAuth mAuth;mAuth = FirebaseAuth.getInstance();
+        FirebaseApp.initializeApp(this);
+        FirebaseAuth mAuth;
+     //   FirebaseAuth.getInstance().signOut();
+        mAuth = FirebaseAuth.getInstance();
+
+
 
         new Handler().postDelayed(new Runnable() {
             @Override
