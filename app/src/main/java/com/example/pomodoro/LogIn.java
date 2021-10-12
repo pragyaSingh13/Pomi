@@ -84,7 +84,7 @@ private FirebaseAuth mAuth;
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(LogIn.this, "Authentication successful.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogIn.this, "Authentication successful", Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             startActivity(new Intent(LogIn.this, home.class));
                            // updateUI(user);

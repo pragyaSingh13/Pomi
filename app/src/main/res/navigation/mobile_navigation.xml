@@ -42,4 +42,11 @@
         android:name="com.example.pomodoro.ui.bucket.BucketFragment"
         android:label="@string/bucket_menu"
         tools:layout="@layout/fragment_bucket" />
+
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.example.pomodoro.ui.logOut.LogOutFragment"
+        android:label="Log out"
+        tools:layout="@layout/fragment_logout"
+        />
 </navigation>

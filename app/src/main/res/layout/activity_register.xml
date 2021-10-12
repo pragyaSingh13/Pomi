@@ -6,15 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".Register">
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="91dp"
+        android:layout_height="76dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginBottom="33dp"
+        app:layout_constraintBottom_toTopOf="@+id/username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView12"
+        app:srcCompat="@drawable/pinkheart" />
+
     <EditText
         android:id="@+id/username"
         android:layout_width="296dp"
         android:layout_height="57dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="136dp"
         android:background="@drawable/listbackground"
         android:ems="10"
         android:hint="Enter Username"
         android:inputType="textPersonName"
+        android:textAlignment="center"
         android:textColorHint="#99CFC9C9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -30,6 +43,7 @@
         android:ems="10"
         android:hint="Enter Password"
         android:inputType="textPassword"
+        android:textAlignment="center"
         android:textColorHint="#99CFC9C9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -58,6 +72,7 @@
         android:ems="10"
         android:hint="Enter E-mail"
         android:inputType="textPersonName"
+        android:textAlignment="center"
         android:textColorHint="#99CFC9C9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"

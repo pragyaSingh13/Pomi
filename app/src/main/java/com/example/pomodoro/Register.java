@@ -129,7 +129,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onFailure(@NonNull Exception e) {
 
-                Toast.makeText(Register.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Register.this, "Oops something went wrong!", Toast.LENGTH_SHORT).show();
 
             }
         });

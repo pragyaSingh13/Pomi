@@ -26,8 +26,6 @@
             <menu>
                 <group android:checkableBehavior="single">
 
-
-
                     <item
                         android:id="@+id/nav_bucket"
                         android:icon="@drawable/heart"
@@ -41,6 +39,16 @@
                         android:icon="@android:drawable/ic_menu_directions"
                         android:title="@string/about_menu" />
 
+                </group>
+            </menu>
+        </item>
+
+        <item android:title="   ">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id = "@+id/nav_logout"
+                        android:title="Log Out" />
                 </group>
             </menu>
         </item>
