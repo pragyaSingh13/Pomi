@@ -48,7 +48,7 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                builder1.setMessage("short term theory shit");
+                builder1.setMessage("short term ");
                 builder1.setCancelable(true);
                 builder1.setPositiveButton(
                         "Got It!",

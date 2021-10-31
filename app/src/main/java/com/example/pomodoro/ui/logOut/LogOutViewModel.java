@@ -1,19 +1,15 @@
-package com.example.pomodoro.ui.about;
-
-import android.widget.TextView;
+package com.example.pomodoro.ui.logOut;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.pomodoro.R;
-
-public class AboutViewModel extends ViewModel {
+public class LogOutViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
-    public AboutViewModel() {
+    public LogOutViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is about fragment");
+        mText.setValue("This is log out fragment");
     }
 
     public LiveData<String> getText() {

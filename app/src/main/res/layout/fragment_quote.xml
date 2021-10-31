@@ -18,102 +18,104 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.295" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="345dp"
-        android:layout_height="470dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/gifImageView4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.456"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.213">
-
-        <EditText
-            android:id="@+id/Quote1"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:ems="10"
-            android:hint="Quote1"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/Quote2"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:ems="10"
-            android:hint="Quote2"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/Quote3"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:ems="10"
-            android:hint="Quote3"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/Quote4"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:ems="10"
-            android:hint="Quote4"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/Quote5"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:ems="10"
-            android:hint="Quote5"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/Quote6"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:ems="10"
-            android:hint="Quote6"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/Quote7"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:ems="10"
-            android:hint="Quote7"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/Quote8"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:ems="10"
-            android:hint="Quote8"
-            android:inputType="textPersonName" />
-    </LinearLayout>
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/saveButton"
-        android:layout_width="65dp"
-        android:layout_height="38dp"
+        android:layout_width="102dp"
+        android:layout_height="42dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="74dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/smoothbutton"
-        android:text="SAVE"
+        android:text="Save"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gifImageView4"
-        app:layout_constraintHorizontal_bias="0.278"
+        app:layout_constraintHorizontal_bias="0.541"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.787" />
+        app:layout_constraintVertical_bias="0.896" />
+
+    <LinearLayout
+        android:layout_width="345dp"
+        android:layout_height="567dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/editTextTextPersonName8"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:fontFamily="@font/architects_daughter"
+            android:hint="Type here..."
+            android:inputType="textPersonName"
+            android:textAlignment="inherit" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName9"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:fontFamily="@font/architects_daughter"
+            android:hint="Type here..."
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName10"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:fontFamily="@font/architects_daughter"
+            android:hint="Type here..."
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName4"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:fontFamily="@font/architects_daughter"
+            android:hint="Type here..."
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName5"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:fontFamily="@font/architects_daughter"
+            android:hint="Type here..."
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName6"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:fontFamily="@font/architects_daughter"
+            android:hint="Type here..."
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName7"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:fontFamily="@font/architects_daughter"
+            android:hint="Type here..."
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:fontFamily="@font/architects_daughter"
+            android:hint="Type here..."
+            android:inputType="textPersonName" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
