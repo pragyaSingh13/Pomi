@@ -14,8 +14,8 @@
         android:background="@drawable/smoothbutton"
         android:text="Log Out"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/logOutLabel"
+        app:layout_constraintStart_toStartOf="@+id/logOutLabel" />
 
     <TextView
         android:id="@+id/logOutLabel"

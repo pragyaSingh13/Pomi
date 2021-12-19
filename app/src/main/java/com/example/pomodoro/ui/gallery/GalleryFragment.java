@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.pomodoro.R;
 import com.example.pomodoro.databinding.FragmentGalleryBinding;
 import com.example.pomodoro.shortInfo;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,10 +42,34 @@ public class GalleryFragment extends Fragment {
         binding = FragmentGalleryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        //-----------------------------------------------------------------------------------------------------
+        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        EditText input = new EditText(getContext());
+          FloatingActionButton actionButton = binding.actionBtn;
+          actionButton.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  input.setHint("type here...");
+                  dialogBuilder.setView(input);
+                  dialogBuilder.setTitle("Add item");
+                  dialogBuilder.setPositiveButton("done", new DialogInterface.OnClickListener() {
+                      @Override
+                      public void onClick(DialogInterface dialog, int which) {
 
+                      }
+                  });
+                  dialogBuilder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                      @Override
+                      public void onClick(DialogInterface dialog, int which) {
 
-        final ListView list = binding.shortList;
-        Button infoButton = binding.infobutton2;
+                      }
+                  });
+
+                dialogBuilder.show();
+
+              }
+          });
+    /*    Button infoButton = binding.infobutton2;
 
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,18 +89,7 @@ public class GalleryFragment extends Fragment {
                 alert11.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#172949")));
                 alert11.show();
             }
-        });
-
-
-        String items[] = {"bitch","lasagna"};
-        ArrayList arrayList = new ArrayList<String>();
-        arrayList.addAll(Arrays.asList(items));
-        ArrayAdapter<String> adapter;
-        adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_list_item_1,
-                arrayList);
-        list.setAdapter(adapter);
-
+        });*/
 
         galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

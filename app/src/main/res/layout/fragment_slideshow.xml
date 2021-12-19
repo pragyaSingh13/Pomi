@@ -6,50 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.slideshow.SlideshowFragment">
 
-    <EditText
-        android:id="@+id/editTextTextPersonName3"
-        android:layout_width="230dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="188dp"
-        android:background="@drawable/listbackground"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.154"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonsave2"
-        android:layout_width="67dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="76dp"
-        android:layout_marginBottom="188dp"
-        android:background="@drawable/smoothbutton"
-        android:text="SAVE"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/gifImageView6"
-        android:layout_width="291dp"
-        android:layout_height="397dp"
-        android:layout_marginStart="208dp"
-        android:layout_marginTop="460dp"
-        android:src="@drawable/fight"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ListView
         android:id="@+id/longList"
-        android:layout_width="350dp"
-        android:layout_height="502dp"
+        android:layout_width="357dp"
+        android:layout_height="498dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="77dp"
         android:background="@drawable/listbackground"
@@ -60,20 +20,27 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.095" />
 
-    <Button
-        android:id="@+id/infobutton"
-        android:layout_width="33dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginEnd="111dp"
-        android:layout_marginBottom="143dp"
-        android:background="@drawable/info"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/gifImageView6"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/longList"
-        app:layout_constraintVertical_bias="1.0" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/actionBtn1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        android:layout_marginEnd="49dp"
+        android:src="@drawable/floatbtn"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/longList" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImageView6"
+        android:layout_width="339dp"
+        android:layout_height="436dp"
+        android:layout_marginTop="412dp"
+        android:layout_marginEnd="32dp"
+        android:src="@drawable/fight"
+        app:layout_constraintEnd_toStartOf="@+id/actionBtn1"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
