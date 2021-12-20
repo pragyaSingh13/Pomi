@@ -1,12 +1,13 @@
 package com.example.pomodoro.ui.slideshow;
 
-import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Layout;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.pomodoro.DatePick;
 import com.example.pomodoro.GoalItemAdapter;
 import com.example.pomodoro.GoalText;
 import com.example.pomodoro.R;
@@ -46,35 +50,92 @@ public class SlideshowFragment extends Fragment {
         binding = FragmentSlideshowBinding.inflate(inflater, container, false);View root = binding.getRoot();
 ///Do from here--------------------------------------------------------------------------
         FloatingActionButton floatingActionButton = binding.actionBtn1;
-        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(getContext());
-        EditText input = new EditText(getContext());
-        ListView listView = binding.longList;
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 
-        populateListView(listView);
+
+
+
+        TextView aDelete = new TextView(getContext());
+        TextView aAchieve = new TextView(getContext());
+        LinearLayout lineL  = new LinearLayout(getContext());
+        ListView listView = binding.longList;
+        View horizontalDiaLine= new View(getActivity());
+
+
+
+        // custom list dialog
+
+        horizontalDiaLine.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                2
+        ));
+        horizontalDiaLine.setBackgroundColor(Color.parseColor("#989898"));
+        lineL.setOrientation(LinearLayout.VERTICAL);
+        lineL.setPadding(30,50,30,30);
+        aAchieve.setText("Goal Achieved");
+        aAchieve.setPadding(0,0,0,30);
+        aAchieve.setTextColor((int)Color.WHITE);
+        aAchieve.setTextSize(20);
+        aDelete.setText("Delete goal?");
+        aDelete.setPadding(0,26,0,0);
+        aDelete.setTextColor((int)Color.WHITE);
+        aDelete.setTextSize(20);
+        aDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(getContext()).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).setTitle("Are you sure want to delete?").show();
+            }
+        });
+
+        lineL.addView(aAchieve);
+        lineL.addView(horizontalDiaLine);
+        lineL.addView(aDelete);
+
+        dialogBuilder.setView(lineL);
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+            }
+        });
+
+
+
+
 
         //listview stuff
+        populateListView(listView);
 
+        //on items click dialog action
+        final AlertDialog alert = dialogBuilder.create();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                alert.show();
+
+            }
+        });
 
         //floating action button
+
+       final AlertDialog alert1 = createFloatAlert(dialogBuilder).create();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                input.setHint("type here...");
-                dialogBuilder.setView(input);
-                dialogBuilder.setTitle("Add item");
-                dialogBuilder.setPositiveButton("done", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
-                dialogBuilder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-
-                dialogBuilder.show();
+                alert1.show();
 
             }
         });
@@ -98,11 +159,72 @@ public class SlideshowFragment extends Fragment {
 
     private void populateListView(ListView listView){
         ArrayList<GoalText> arrayList = new ArrayList<GoalText>();
-        GoalText g1 = new GoalText("Lose Weight"," 12/10/2022");
+        GoalText g1 = new GoalText("Lose Weight ieufbeougfbeourfgbe;orubfoerug"," 12/10/2022");
         arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+        arrayList.add(g1);
+
 
         //set it in listview
         GoalItemAdapter goalItemAdapter = new GoalItemAdapter(getContext(),arrayList);
         listView.setAdapter(goalItemAdapter);
+    }
+
+    private AlertDialog.Builder createFloatAlert(AlertDialog.Builder dialogBuilder){
+        EditText input = new EditText(getContext());
+        EditText datepick = new EditText((getContext()));
+        Context context = dialogBuilder.getContext();
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setPadding(38,20,38,20);
+
+
+        datepick.setHint("Select date");
+        input.setHint("type here...");
+
+        //datepicker listener
+        datepick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        datepick.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                DatePick datePick = new DatePick(datepick,v.getContext());
+                datePick.onFocusChange(v,true);
+            }
+        });
+        linearLayout.addView(input);
+        linearLayout.addView(datepick);
+        dialogBuilder.setView(linearLayout);
+        dialogBuilder.setTitle("Add item");
+        dialogBuilder.setPositiveButton("done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dialogBuilder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        return dialogBuilder;
     }
 }

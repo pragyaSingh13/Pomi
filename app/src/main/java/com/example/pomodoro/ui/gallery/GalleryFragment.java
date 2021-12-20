@@ -43,7 +43,7 @@ public class GalleryFragment extends Fragment {
         View root = binding.getRoot();
 
         //-----------------------------------------------------------------------------------------------------
-        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(getActivity());
         EditText input = new EditText(getContext());
           FloatingActionButton actionButton = binding.actionBtn;
           actionButton.setOnClickListener(new View.OnClickListener() {
