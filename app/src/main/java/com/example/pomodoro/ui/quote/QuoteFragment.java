@@ -128,6 +128,10 @@ public class QuoteFragment extends Fragment {
         binding = null;
     }
     private void retrieveQuotes(FirebaseUser curUser,String[] quotes, EditText[] quoteET){
+        if(!(isInternetAvailable())){
+            Snackbar.make(getView(),"You're not connected to internet.",Snackbar.LENGTH_LONG).setBackgroundTint(Color.parseColor("#172949")).setTextColor((int)Color.WHITE).show();
+
+        }
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("quotes");
 
        mDatabase.addValueEventListener(new ValueEventListener() {

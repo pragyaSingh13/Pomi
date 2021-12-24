@@ -27,7 +27,7 @@
         android:id="@+id/gifImageView"
         android:layout_width="167dp"
         android:layout_height="196dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="148dp"
         android:foregroundGravity="right"
         android:src="@drawable/beforetimer"
         app:layout_constraintEnd_toEndOf="@+id/button"
@@ -65,12 +65,21 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="240dp"
+        android:layout_width="300dp"
         android:layout_height="133dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="164dp"
+        android:layout_marginTop="144dp"
+        android:layout_marginBottom="37dp"
         android:background="@drawable/dialog2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        android:fontFamily="@font/architects_daughter"
+        android:paddingLeft="30dp"
+        android:paddingTop="40dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="40dp"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/gifImageView"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        tools:layout_editor_absoluteX="32dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
