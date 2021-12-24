@@ -1,6 +1,8 @@
 package com.example.pomodoro.ui.bucket;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,20 +49,15 @@ public class BucketFragment extends Fragment {
         binding = FragmentBucketBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        final ListView list = binding.bucketList;
+         ListView list = binding.bucketList;
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser curUser = mAuth.getCurrentUser();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         EditText editText = binding.addEt;
         Button savebtn = binding.button3;
         List<String> goals = new ArrayList<String>();
-        DatabaseReference pDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("bucket list");
-        goals.add("garbage");
-        goals.add("garbage2");
-        pDatabase.setValue(goals);
-        updateList(curUser, list);
-        //getInitData(curUser);
-        //goals.addAll(getInitData(curUser));
+       DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("bucket list");
+        updateList(curUser,list);
         Toast.makeText(getContext(), "" + goals, Toast.LENGTH_SHORT).show();
         savebtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,19 +88,36 @@ public class BucketFragment extends Fragment {
     }
 
     private void updateList(FirebaseUser curUser, ListView listView) {
+        if(!isInternetAvailable()){
+            Snackbar.make(getView(),"You're not connected to internet.",Snackbar.LENGTH_LONG).setBackgroundTint(Color.parseColor("#172949")).setTextColor((int)Color.WHITE).show();
+        }
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("bucket list");
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                List<String> obj = (List<String>) snapshot.getValue();
-                ArrayAdapter<String> adapter;
-                adapter = new ArrayAdapter<String>(getContext(),
-                        android.R.layout.simple_list_item_1,
-                        obj);
+                List<String> obj = new ArrayList<>();
+                obj = (List<String>) snapshot.getValue();
+              /*  if(obj.isEmpty()){
+                    List<String> list = new ArrayList<>();
+                    list.add("   ");
+                    mDatabase.setValue(list);
+                    ArrayAdapter<String> adapter;
+                    adapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_list_item_1,
+                            obj);
 
-                listView.setAdapter(adapter);
-                return;
+                    listView.setAdapter(adapter);
+                }else {*/
+
+                    // Toast.makeText(getActivity(), ""+obj, Toast.LENGTH_SHORT).show();
+                    ArrayAdapter<String> adapter;
+                    adapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_list_item_1,
+                            obj);
+
+                    listView.setAdapter(adapter);
+              //  }
             }
 
             @Override
@@ -113,28 +127,34 @@ public class BucketFragment extends Fragment {
         });
         return;
     }
-    private int addToList(List<String> goals,String item_str,FirebaseUser curUser,ListView list){
+    private void addToList(List<String> goals,String item_str,FirebaseUser curUser,ListView list){
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("bucket list");
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        if(!isInternetAvailable()){
+            Snackbar.make(getView(),"You're not connected to internet.",Snackbar.LENGTH_LONG).setBackgroundTint(Color.parseColor("#172949")).setTextColor((int)Color.WHITE).show();
+        }
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-
                 goals.clear();
                 goals.addAll((List<String>) snapshot.getValue());
                 goals.add(item_str);
                 mDatabase.setValue(goals);
                 updateList(curUser,list);
                 Snackbar.make(list,"List Updated Successfully.",Snackbar.LENGTH_LONG).setBackgroundTint(Color.parseColor("#172949")).setTextColor((int)Color.WHITE).show();
-                return;
+
+
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
-
             }
         });
-        return 0;
+    }
+    public boolean isInternetAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 }
 
