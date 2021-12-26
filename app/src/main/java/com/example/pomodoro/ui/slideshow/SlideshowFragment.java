@@ -51,15 +51,11 @@ public class SlideshowFragment extends Fragment {
 ///Do from here--------------------------------------------------------------------------
         FloatingActionButton floatingActionButton = binding.actionBtn1;
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-
-
-
-
         TextView aDelete = new TextView(getContext());
         TextView aAchieve = new TextView(getContext());
         LinearLayout lineL  = new LinearLayout(getContext());
-        ListView listView = binding.longList;
         View horizontalDiaLine= new View(getActivity());
+        ListView listView = binding.longList;
 
 
 
@@ -227,4 +223,6 @@ public class SlideshowFragment extends Fragment {
 
         return dialogBuilder;
     }
+
+
 }

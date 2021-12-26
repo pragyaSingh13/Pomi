@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 List<String> quotes = (List<String>) snapshot.getValue();
-               int rand =  0 + (int)(Math.random() * ((quotes.size() - 0) + 1));
+               int rand =  0 + (int)(Math.random() * (((quotes.size()-1 )- 0) + 1));
                quoteView.setText("''" +quotes.get(rand)+"''");
             }
 
