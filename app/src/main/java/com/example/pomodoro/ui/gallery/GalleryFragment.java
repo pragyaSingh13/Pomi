@@ -42,7 +42,7 @@ public class GalleryFragment extends Fragment {
 
     private GalleryViewModel galleryViewModel;
     private FragmentGalleryBinding binding;
-    //write the shit here!!!!!!!!!!!!1
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         galleryViewModel = new ViewModelProvider(this).get(GalleryViewModel.class);
         binding = FragmentGalleryBinding.inflate(inflater, container, false);
@@ -63,7 +63,7 @@ public class GalleryFragment extends Fragment {
 
 
         //listItemAlert
-        AlertDialog alert2 = listItemAert().create();
+        AlertDialog alert2 = listItemAlert().create();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -167,7 +167,7 @@ public class GalleryFragment extends Fragment {
         return dialogBuilder;
     }
 
-    private androidx.appcompat.app.AlertDialog.Builder listItemAert(){
+    private androidx.appcompat.app.AlertDialog.Builder listItemAlert(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         TextView aDelete = new TextView(getContext());
         TextView aAchieve = new TextView(getContext());

@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/star1"
+        android:src="@drawable/star0"
         android:layout_weight="0"
         android:paddingHorizontal="5dp"
         android:paddingTop="2dp"
