@@ -4,10 +4,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,27 +47,9 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        TextView quoteView = binding.textView4;
-        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("quotes");
-        if(!isInternetAvailable()){
-            Snackbar.make(getView(),"You're not connected to internet.",Snackbar.LENGTH_LONG).setBackgroundTint(Color.parseColor("#172949")).setTextColor((int)Color.WHITE).show();
 
-        }
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                List<String> quotes = (List<String>) snapshot.getValue();
-               int rand =  0 + (int)(Math.random() * (((quotes.size()-1 )- 0) + 1));
-               quoteView.setText("''" +quotes.get(rand)+"''");
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
-
+        initQuotes();
+        timerRun(binding.textView3);
 
 
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -86,6 +70,44 @@ public class HomeFragment extends Fragment {
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
+    void initQuotes(){
+        TextView quoteView = binding.textView4;
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("quotes");
+        if(!isInternetAvailable()){
+            Snackbar.make(getView(),"You're not connected to internet.",Snackbar.LENGTH_LONG).setBackgroundTint(Color.parseColor("#172949")).setTextColor((int)Color.WHITE).show();
+
+        }
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                List<String> quotes = (List<String>) snapshot.getValue();
+                int rand =  0 + (int)(Math.random() * (((quotes.size()-1 )- 0) + 1));
+                quoteView.setText("''" +quotes.get(rand)+"''");
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+    }
+    void timerRun(TextView timerView){
+
+        new CountDownTimer(300000000,1000){
+            public void onTick(long millisUntilFinished) {
+                int seconds = (int) (millisUntilFinished/ 1000) % 60 ;
+                int minutes = (int) ((millisUntilFinished/ (1000*60)) % 60);
+                int hours   = (int) ((millisUntilFinished/ (1000*60*60)) % 24);
+                timerView.setText(hours+" : "+ minutes+" : "+seconds);
+            }
+
+            public void onFinish() {
+                Toast.makeText(getContext(), "Done!!", Toast.LENGTH_SHORT).show();
+            }
+        }.start();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.pomodoro.ui.slideshow;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import com.example.pomodoro.databinding.FragmentSlideshowBinding;
 import com.example.pomodoro.longInfo;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -71,7 +73,6 @@ public class SlideshowFragment extends Fragment {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         ListView listView = binding.longList;
         ArrayList<GoalText> listItems = new ArrayList<>();
-
         initItems(listView);
 
 
@@ -247,6 +248,9 @@ public class SlideshowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setAchieved(position);
+                removeItemFromDB(position);
+                Snackbar.make(getView(),"Check your Recent Achievements ",Snackbar.LENGTH_LONG).setBackgroundTint(Color.parseColor("#172949")).setTextColor((int)Color.WHITE).show();
+                Toast.makeText(getContext(),"Check your Recent Achievements",Toast.LENGTH_SHORT);
             }
         });
 
@@ -299,20 +303,26 @@ public class SlideshowFragment extends Fragment {
         final View textEntryView = factory.inflate(R.layout.goal_list_item, null);
         textView = textEntryView.findViewById(R.id.date_text);*/
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("Long Term Goals");
+        DatabaseReference recentRef = FirebaseDatabase.getInstance().getReference();
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                String finalkey = null;
+                Map.Entry<String, String> mapEnt = null;
                 int i=0;
                 Map<String,String> map = (Map<String, String>) snapshot.getValue();
                 Map<String,String> sortedMap = new TreeMap<>(map);
-                for(String key: sortedMap.keySet()){
-                    finalkey = key+"";
+                Map<String, Object> mapk = new HashMap<>();
+                for (Map.Entry<String,String> entry : sortedMap.entrySet()){
+                    mapEnt = entry;
+                    mapEnt.setValue("LT"+mapEnt.getValue());
                     if(i==position)
                         break;
                     i++;
+
                 }
 
+                mapk.put(mapEnt.getKey(),(Object)mapEnt.getValue());
+                recentRef.child("users").child(curUser.getUid()).child("Recents").updateChildren(mapk);
 
             }
 

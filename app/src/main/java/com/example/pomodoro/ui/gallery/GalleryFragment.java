@@ -34,6 +34,7 @@ import com.example.pomodoro.databinding.FragmentGalleryBinding;
 import com.example.pomodoro.shortInfo;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -235,6 +236,10 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setAchieved(position);
+                setAchieved(position);
+                removeItemFromDB(position);
+                Snackbar.make(getView(),"Check your Recent Achievements ",Snackbar.LENGTH_LONG).setBackgroundTint(Color.parseColor("#172949")).setTextColor((int)Color.WHITE).show();
+                Toast.makeText(getContext(),"Check your Recent Achievements",Toast.LENGTH_SHORT);
             }
         });
 
@@ -281,26 +286,33 @@ public class GalleryFragment extends Fragment {
 
     }
 
+
     void setAchieved(int position){
       /*  TextView textView;
         final LayoutInflater factory = getLayoutInflater();
         final View textEntryView = factory.inflate(R.layout.goal_list_item, null);
         textView = textEntryView.findViewById(R.id.date_text);*/
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("Short Term Goals");
+        DatabaseReference recentRef = FirebaseDatabase.getInstance().getReference();
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                String finalkey = null;
+                Map.Entry<String, String> mapEnt = null;
                 int i=0;
                 Map<String,String> map = (Map<String, String>) snapshot.getValue();
                 Map<String,String> sortedMap = new TreeMap<>(map);
-                for(String key: sortedMap.keySet()){
-                    finalkey = key+"";
+                Map<String, Object> mapk = new HashMap<>();
+                for (Map.Entry<String,String> entry : sortedMap.entrySet()){
+                    mapEnt = entry;
+                    mapEnt.setValue("ST"+mapEnt.getValue());
                     if(i==position)
                         break;
                     i++;
+
                 }
 
+                mapk.put(mapEnt.getKey(),(Object)mapEnt.getValue());
+                recentRef.child("users").child(curUser.getUid()).child("Recents").updateChildren(mapk);
 
             }
 
@@ -310,9 +322,8 @@ public class GalleryFragment extends Fragment {
             }
         });
 
-
-
     }
+
 
 
 }
