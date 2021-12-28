@@ -69,10 +69,6 @@ public class SlideshowFragment extends Fragment {
 ///Do from here--------------------------------------------------------------------------
         FloatingActionButton floatingActionButton = binding.actionBtn1;
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-        TextView aDelete = new TextView(getContext());
-        TextView aAchieve = new TextView(getContext());
-        LinearLayout lineL  = new LinearLayout(getContext());
-        View horizontalDiaLine= new View(getActivity());
         ListView listView = binding.longList;
         ArrayList<GoalText> listItems = new ArrayList<>();
 
@@ -120,8 +116,6 @@ public class SlideshowFragment extends Fragment {
         binding = null;
     }
 
-    private void populateListView(ListView listView){
-    }
 
     private AlertDialog.Builder createFloatAlert(AlertDialog.Builder dialogBuilder,ArrayList<GoalText> listItems){
 
@@ -180,13 +174,6 @@ public class SlideshowFragment extends Fragment {
         return dialogBuilder;
     }
 
-    void updateListOnClick(ListView listView,String key,ArrayList<GoalText> arrayList,String goal){
-
-        GoalText g1 = new GoalText(goal, key);
-        arrayList.add(g1);
-        GoalItemAdapter goalItemAdapter = new GoalItemAdapter(getContext(),arrayList);
-        listView.setAdapter(goalItemAdapter);
-    }
 
     private void initItems(ListView listView){
         ArrayList<GoalText> arrayList = new ArrayList<>();
@@ -256,6 +243,13 @@ public class SlideshowFragment extends Fragment {
             }
         });
 
+        aAchieve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAchieved(position);
+            }
+        });
+
         lineL.addView(aAchieve);
         lineL.addView(horizontalDiaLine);
         lineL.addView(aDelete);
@@ -296,6 +290,39 @@ public class SlideshowFragment extends Fragment {
 
             }
         });
+
+    }
+
+    void setAchieved(int position){
+      /*  TextView textView;
+        final LayoutInflater factory = getLayoutInflater();
+        final View textEntryView = factory.inflate(R.layout.goal_list_item, null);
+        textView = textEntryView.findViewById(R.id.date_text);*/
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("Long Term Goals");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                String finalkey = null;
+                int i=0;
+                Map<String,String> map = (Map<String, String>) snapshot.getValue();
+                Map<String,String> sortedMap = new TreeMap<>(map);
+                for(String key: sortedMap.keySet()){
+                    finalkey = key+"";
+                    if(i==position)
+                        break;
+                    i++;
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+
 
     }
 

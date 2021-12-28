@@ -34,12 +34,27 @@ import com.example.pomodoro.databinding.FragmentGalleryBinding;
 import com.example.pomodoro.shortInfo;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class GalleryFragment extends Fragment {
-
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
     private GalleryViewModel galleryViewModel;
     private FragmentGalleryBinding binding;
 
@@ -50,28 +65,23 @@ public class GalleryFragment extends Fragment {
 
         //-----------------------------------------------------------------------------------------------------
         ListView listView = binding.shortList;
-        LinearLayout lineL  = new LinearLayout(getContext());
-        View horizontalDiaLine= new View(getActivity());
-        TextView aDelete = new TextView(getContext());
-        TextView aAchieve = new TextView(getContext());
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        EditText input = new EditText(getContext());
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         FloatingActionButton actionButton = binding.actionBtn;
+        ArrayList<GoalText> listItems = new ArrayList<>();
+        initItems(listView);
 
-        populateListView(listView);
 
-
-
-        //listItemAlert
-        AlertDialog alert2 = listItemAlert().create();
+        //on items click dialog action
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                alert2.show();
+                listItemAlert(parent,position);
+
             }
         });
+
         //float action
-        final AlertDialog alert1 = createFloatAlert(dialogBuilder).create();
+        final AlertDialog alert1 = createFloatAlert(dialogBuilder,listItems).create();
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +90,7 @@ public class GalleryFragment extends Fragment {
 
             }
         });
+
 
 
         galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -95,33 +106,9 @@ public class GalleryFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+    private AlertDialog.Builder createFloatAlert(AlertDialog.Builder dialogBuilder,ArrayList<GoalText> listItems){
 
-    private void populateListView(ListView listView){
-        ArrayList<GoalText> arrayList = new ArrayList<GoalText>();
-        GoalText g1 = new GoalText("crores ieufbeougfbeourfgbe;orubfoerug"," 12/10/2022");
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-        arrayList.add(g1);
-
-
-        //set it in listview
-        GoalItemAdapter goalItemAdapter = new GoalItemAdapter(getContext(),arrayList);
-        listView.setAdapter(goalItemAdapter);
-    }
-
-    private androidx.appcompat.app.AlertDialog.Builder createFloatAlert(AlertDialog.Builder dialogBuilder){
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
         EditText input = new EditText(getContext());
         EditText datepick = new EditText((getContext()));
         Context context = dialogBuilder.getContext();
@@ -155,6 +142,15 @@ public class GalleryFragment extends Fragment {
         dialogBuilder.setPositiveButton("done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                String goal = input.getText().toString();
+                String date = datepick.getText().toString();
+                Map<String,Object> map = new HashMap<>();
+                map.put(date,goal);
+                mDatabase.child("users").child(curUser.getUid()).child("Short Term Goals").updateChildren(map);
+                //   updateListOnClick(binding.longList,date,listItems,goal);
+                initItems(binding.shortList);
+
 
             }
         });
@@ -167,7 +163,37 @@ public class GalleryFragment extends Fragment {
         return dialogBuilder;
     }
 
-    private androidx.appcompat.app.AlertDialog.Builder listItemAlert(){
+    private void initItems(ListView listView){
+        ArrayList<GoalText> arrayList = new ArrayList<>();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("Short Term Goals");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                Map<Date, Object> list = (Map<Date, Object>) snapshot.getValue();
+                Map< Date, Object> sortedMap = new TreeMap< Date, Object>(list);
+                Iterator hmIterator = sortedMap.entrySet().iterator();
+
+                while(hmIterator.hasNext()){
+                    Map.Entry mapElement
+                            = (Map.Entry)hmIterator.next();
+                    arrayList.add(new GoalText((String)mapElement.getValue(), (String) mapElement.getKey()));
+                    GoalItemAdapter goalItemAdapter = new GoalItemAdapter(getContext(),arrayList);
+                    listView.setAdapter(goalItemAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    private void listItemAlert(AdapterView<?> adapt, int position){
+        Toast.makeText(getContext(), ""+position, Toast.LENGTH_LONG).show();
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         TextView aDelete = new TextView(getContext());
         TextView aAchieve = new TextView(getContext());
@@ -194,7 +220,7 @@ public class GalleryFragment extends Fragment {
                 new AlertDialog.Builder(getContext()).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        removeItemFromDB(position);
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
@@ -202,6 +228,13 @@ public class GalleryFragment extends Fragment {
 
                     }
                 }).setTitle("Are you sure want to delete?").show();
+            }
+        });
+
+        aAchieve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAchieved(position);
             }
         });
 
@@ -217,7 +250,68 @@ public class GalleryFragment extends Fragment {
                 dialog.dismiss();
             }
         });
-        return dialogBuilder;
+        dialogBuilder.show();
+    }
+
+    void removeItemFromDB(int position){
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("Short Term Goals");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                String finalkey = null;
+                int i=0;
+                Map<String,String> map = (Map<String, String>) snapshot.getValue();
+                Map<String,String> sortedMap = new TreeMap<>(map);
+                for(String key: sortedMap.keySet()){
+                    finalkey = key+"";
+                    if(i==position)
+                        break;
+                    i++;
+                }
+                Toast.makeText(getActivity(), ""+finalkey, Toast.LENGTH_SHORT).show();
+                dbRef.child(finalkey).removeValue();
+                initItems(binding.shortList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    void setAchieved(int position){
+      /*  TextView textView;
+        final LayoutInflater factory = getLayoutInflater();
+        final View textEntryView = factory.inflate(R.layout.goal_list_item, null);
+        textView = textEntryView.findViewById(R.id.date_text);*/
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("Short Term Goals");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                String finalkey = null;
+                int i=0;
+                Map<String,String> map = (Map<String, String>) snapshot.getValue();
+                Map<String,String> sortedMap = new TreeMap<>(map);
+                for(String key: sortedMap.keySet()){
+                    finalkey = key+"";
+                    if(i==position)
+                        break;
+                    i++;
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+
+
     }
 
 
