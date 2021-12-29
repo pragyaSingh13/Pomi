@@ -38,7 +38,11 @@ import com.google.firebase.database.ValueEventListener;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -46,6 +50,7 @@ import pl.droidsonroids.gif.GifImageView;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -181,6 +186,7 @@ public class HomeFragment extends Fragment {
     }
 
     AlertDialog.Builder getFinishAlert(){
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("Recents");
         LinearLayout lineL  = new LinearLayout(getContext());
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         Button startbtn = new Button(dialogBuilder.getContext());
@@ -190,18 +196,26 @@ public class HomeFragment extends Fragment {
         startbtn.setText("Finish");
         startbtn.setBackgroundColor((int) Color.RED);
         startbtn.setTextColor((int)Color.WHITE);
-        startbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         titleView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         titleView.setText("You did it!");
         titleView.setTextSize(30);
         titleView.setTextColor((int)Color.WHITE);
         editText.setHint("Type your result here");
         editText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        startbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Date date = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy");
+                String str = formatter.format(date);
+                String result = "RT"+editText.getText().toString();
+                Map<String, Object> entMap = new HashMap<>();
+                entMap.put(str,(Object)result);
+
+                editText.setText("");
+                Toast.makeText(dialogBuilder.getContext(), "Good Job! Check your recents.", Toast.LENGTH_LONG).show();
+            }
+        });
         lineL.setOrientation(LinearLayout.VERTICAL);
         lineL.setPadding(30,10,30,30);
         lineL.addView(titleView);
@@ -225,7 +239,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 List<String> quotes = (List<String>) snapshot.getValue();
-                new CountDownTimer(time,40000){
+                new CountDownTimer(time,4000){
                     @Override
                     public void onTick(long millisUntilFinished) {
                         int rand =  0 + (int)(Math.random() * (((quotes.size()-1 )- 0) + 1));
