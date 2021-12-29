@@ -1,18 +1,25 @@
 package com.example.pomodoro.ui.home;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.accessibility.AccessibilityViewCommand;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -34,6 +41,8 @@ import org.w3c.dom.Text;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import pl.droidsonroids.gif.GifImageView;
+
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
@@ -47,9 +56,15 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        Button timButton = binding.timerBtn;;
+        timButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setTimer(timButton);
+            }
+        });
         initQuotes();
-        timerRun(binding.textView3);
+        //timerRun(binding.textView3);
 
 
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -94,9 +109,19 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    void timerRun(TextView timerView){
 
-        new CountDownTimer(300000000,1000){
+    void timerRun(TextView timerView, long millis,Button timbtn,String goal){
+        MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.tick);
+        mp.setLooping(true);
+        mp.start();
+        TextView goalText = binding.goalText;
+        Button pauseBtn = binding.button2;
+        Button stopBtn = binding.button;
+        pauseBtn.setVisibility(View.VISIBLE);
+        stopBtn.setVisibility(View.VISIBLE);
+        goalText.setText(goal);
+        initQuotes(millis*4);
+        new CountDownTimer(millis,1000){
             public void onTick(long millisUntilFinished) {
                 int seconds = (int) (millisUntilFinished/ 1000) % 60 ;
                 int minutes = (int) ((millisUntilFinished/ (1000*60)) % 60);
@@ -105,9 +130,121 @@ public class HomeFragment extends Fragment {
             }
 
             public void onFinish() {
+                mp.stop();
+                MediaPlayer mp2 = MediaPlayer.create(getContext(), R.raw.bellding);
+                mp2.start();
                 Toast.makeText(getContext(), "Done!!", Toast.LENGTH_SHORT).show();
+                pauseBtn.setVisibility(View.GONE);
+                stopBtn.setVisibility(View.GONE);
+                timbtn.setVisibility(View.VISIBLE);
+                AlertDialog alert = getFinishAlert().create();
+                alert.show();
             }
         }.start();
+    }
+
+    void setTimer(Button timbtn){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        Context context = dialogBuilder.getContext();
+        dialogBuilder.setTitle("Set Timer");
+        EditText input = new EditText(context);
+        EditText goal = new EditText(context);
+        goal.setHint("what do you plan to get done?");
+        goal.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        input.setHint("minutes");
+        input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setPadding(38,20,38,20);
+        Button startbtn = new Button(context);
+        startbtn.setText("Start!");
+        startbtn.setBackgroundColor((int) Color.RED);
+        startbtn.setTextColor((int)Color.WHITE);
+        startbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int minutes = Integer.parseInt(input.getText().toString());
+                String goalStr = goal.getText().toString();
+                timbtn.setVisibility(View.GONE);
+                Toast.makeText(context, "Let's do it!", Toast.LENGTH_LONG).show();
+                timerRun(binding.textView3,minutes * 60 * 1000,timbtn,goalStr);
+
+            }
+        });
+        linearLayout.addView(goal);
+        linearLayout.addView(input);
+        linearLayout.addView(startbtn);
+        dialogBuilder.setView(linearLayout);
+        AlertDialog alert = dialogBuilder.create();
+        alert.show();
+    }
+
+    AlertDialog.Builder getFinishAlert(){
+        LinearLayout lineL  = new LinearLayout(getContext());
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        Button startbtn = new Button(dialogBuilder.getContext());
+        EditText editText = new EditText(dialogBuilder.getContext());
+        TextView titleView  = new TextView(dialogBuilder.getContext());
+        GifImageView gifImageView = new GifImageView(dialogBuilder.getContext());
+        startbtn.setText("Finish");
+        startbtn.setBackgroundColor((int) Color.RED);
+        startbtn.setTextColor((int)Color.WHITE);
+        startbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        titleView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        titleView.setText("You did it!");
+        titleView.setTextSize(30);
+        titleView.setTextColor((int)Color.WHITE);
+        editText.setHint("Type your result here");
+        editText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        lineL.setOrientation(LinearLayout.VERTICAL);
+        lineL.setPadding(30,10,30,30);
+        lineL.addView(titleView);
+        lineL.addView(gifImageView);
+        lineL.addView(editText);
+        lineL.addView(startbtn);
+        gifImageView.setImageResource(R.drawable.hurray);
+        dialogBuilder.setView(lineL);
+        return dialogBuilder;
+    }
+
+    void initQuotes(long time){
+        TextView quoteView = binding.textView4;
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("quotes");
+        if(!isInternetAvailable()){
+            Snackbar.make(getView(),"You're not connected to internet.",Snackbar.LENGTH_LONG).setBackgroundTint(Color.parseColor("#172949")).setTextColor((int)Color.WHITE).show();
+
+        }
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                List<String> quotes = (List<String>) snapshot.getValue();
+                new CountDownTimer(time,40000){
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        int rand =  0 + (int)(Math.random() * (((quotes.size()-1 )- 0) + 1));
+                        quoteView.setText("''" +quotes.get(rand)+"''");
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+                };
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
     }
 
 }

@@ -11,7 +11,7 @@
         android:layout_width="127dp"
         android:layout_height="47dp"
         android:layout_marginBottom="312dp"
-        android:background="@drawable/smoothbutton"
+        android:background="@drawable/smoothbutton2"
         android:text="Log Out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/logOutLabel"
