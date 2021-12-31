@@ -1,4 +1,4 @@
-# Pomodori
+# Pomi
 An app that helps you achieve short as well as long term goals!
 
 <img src= "images/sss1.jpg" height = "400" width = "200">
