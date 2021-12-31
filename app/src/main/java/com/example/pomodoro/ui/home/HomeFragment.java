@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+    CountDownTimer timer;
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -63,13 +65,22 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.tick);
+        MediaPlayer mp2 = MediaPlayer.create(getContext(), R.raw.bellding);
         Button timButton = binding.timerBtn;;
+        Button stopBtn = binding.button;
         TextView quoteView = binding.textView4;
         DatabaseReference dataref = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("username");
         timButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setTimer(timButton);
+                setTimer(timButton, mp, mp2);
+            }
+        });
+        stopBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopTimer(mp, mp2);
             }
         });
         dataref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -93,7 +104,7 @@ public class HomeFragment extends Fragment {
             }
         });
         initQuotes();
-        continueTimer();
+        continueTimer(mp, mp2);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -149,49 +160,50 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    void timerRun(TextView timerView, long millis,Button timbtn,String goal){
+    void timerRun(TextView timerView, long millis,Button timbtn,String goal,MediaPlayer mp, MediaPlayer mp2, Boolean ifStop){
+        Button stopBtn = binding.button;
+
         Button strtbtn = binding.timerBtn;
         strtbtn.setVisibility(View.GONE);
         DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("timer");
-        MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.tick);
         mp.setLooping(true);
         mp.start();
         TextView goalText = binding.goalText;
-        Button pauseBtn = binding.button2;
-        Button stopBtn = binding.button;
-        pauseBtn.setVisibility(View.VISIBLE);
+
+
         stopBtn.setVisibility(View.VISIBLE);
         goalText.setText(goal);
 
-        new CountDownTimer(millis,1000){
-            public void onTick(long millisUntilFinished) {
-                Map<Object, Object> map = new HashMap<>();
-                map.put(goal,(Long) millisUntilFinished);
-                dataRef.setValue(map);
-                int seconds = (int) (millisUntilFinished/ 1000) % 60 ;
-                int minutes = (int) ((millisUntilFinished/ (1000*60)) % 60);
-                int hours   = (int) ((millisUntilFinished/ (1000*60*60)) % 24);
-                timerView.setText(hours+" : "+ minutes+" : "+seconds);
-            }
+          timer =  new CountDownTimer(millis,1000){
+                    public void onTick(long millisUntilFinished) {
 
-            public void onFinish() {
-                mp.stop();
-                MediaPlayer mp2 = MediaPlayer.create(getContext(), R.raw.bellding);
-                mp2.start();
-                Toast.makeText(getContext(), "Done!!", Toast.LENGTH_SHORT).show();
-                pauseBtn.setVisibility(View.GONE);
-                stopBtn.setVisibility(View.GONE);
-                timbtn.setVisibility(View.VISIBLE);
-                Map<Object,Object> map = new HashMap<>();
-                map.put(" ",0);
-                dataRef.setValue(map);
-                AlertDialog alert = getFinishAlert().create();
-                alert.show();
-            }
-        }.start();
+                        Map<Object, Object> map = new HashMap<>();
+                        map.put(goal,(Long) millisUntilFinished);
+                        dataRef.setValue(map);
+                        int seconds = (int) (millisUntilFinished/ 1000) % 60 ;
+                        int minutes = (int) ((millisUntilFinished/ (1000*60)) % 60);
+                        int hours   = (int) ((millisUntilFinished/ (1000*60*60)) % 24);
+                        timerView.setText(hours+" : "+ minutes+" : "+seconds);
+
+                    }
+
+                    public void onFinish() {
+                        mp.stop();
+                        mp2.start();
+                        Toast.makeText(getContext(), "Done!!", Toast.LENGTH_SHORT).show();
+                        stopBtn.setVisibility(View.GONE);
+                        timbtn.setVisibility(View.VISIBLE);
+                        Map<Object,Object> map = new HashMap<>();
+                        map.put(" ",0);
+                        dataRef.setValue(map);
+                        AlertDialog alert = getFinishAlert().create();
+                        alert.show();
+                    }
+                }.start();
+
     }
 
-    void setTimer(Button timbtn){
+    void setTimer(Button timbtn,MediaPlayer mp, MediaPlayer mp2){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         Context context = dialogBuilder.getContext();
         dialogBuilder.setTitle("Set Timer");
@@ -216,7 +228,7 @@ public class HomeFragment extends Fragment {
                 String goalStr = goal.getText().toString();
                 timbtn.setVisibility(View.GONE);
                 Toast.makeText(context, "Let's do it!", Toast.LENGTH_LONG).show();
-                timerRun(binding.textView3,minutes * 60 * 1000,timbtn,goalStr);
+                timerRun(binding.textView3,minutes * 60 * 1000,timbtn,goalStr,mp,mp2,false);
 
             }
         });
@@ -236,7 +248,9 @@ public class HomeFragment extends Fragment {
         EditText editText = new EditText(dialogBuilder.getContext());
         TextView titleView  = new TextView(dialogBuilder.getContext());
         GifImageView gifImageView = new GifImageView(dialogBuilder.getContext());
-        startbtn.setText("Finish");
+        Button stopButton = binding.button;
+        stopButton.setVisibility(View.GONE);
+        startbtn.setText("Log It");
         startbtn.setBackgroundColor((int) Color.RED);
         startbtn.setTextColor((int)Color.WHITE);
         titleView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -254,7 +268,7 @@ public class HomeFragment extends Fragment {
                 String result = "RT"+editText.getText().toString();
                 Map<String, Object> entMap = new HashMap<>();
                 entMap.put(str,(Object)result);
-
+                dbRef.updateChildren(entMap);
                 editText.setText("");
                 Toast.makeText(dialogBuilder.getContext(), "Good Job! Check your recents.", Toast.LENGTH_LONG).show();
             }
@@ -270,8 +284,7 @@ public class HomeFragment extends Fragment {
         return dialogBuilder;
     }
 
-
-    void continueTimer(){
+    void continueTimer(MediaPlayer mp, MediaPlayer mp2){
 
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("timer");
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -285,7 +298,7 @@ public class HomeFragment extends Fragment {
                      time = entry.getValue();
                 }
                 if(!map.containsValue(0)){
-                    timerRun(binding.textView3,time, binding.timerBtn, goal);
+                    timerRun(binding.textView3,time, binding.timerBtn, goal,mp,mp2,false);
                 }
             }
 
@@ -295,5 +308,24 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+    void stopTimer(MediaPlayer mp, MediaPlayer mp2){
+        Button startbtn = binding.timerBtn;
+        startbtn.setVisibility(View.VISIBLE);
+        TextView timerView = binding.textView3;
+        TextView goalView = binding.goalText;
+        goalView.setText(" ");
+        timerView.setText("-- : -- : --");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("timer");
+        mp.stop();
+        mp2.stop();
+        timer.cancel();
+        Map<String, Long> map = new HashMap<>();
+        map.put(" ",Long.valueOf(0));
+        databaseReference.setValue(map);
+        AlertDialog finishAlert = getFinishAlert().create();
+        finishAlert.show();
+
+    }
+
 
 }

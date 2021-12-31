@@ -38,31 +38,14 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="75dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="164dp"
         android:background="@android:color/transparent"
         android:drawableLeft="@drawable/stop_ic"
         android:text="stop"
         android:textColor="#F355D8"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.924"
-        app:layout_constraintStart_toEndOf="@+id/button2"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        tools:visibility="visible" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="81dp"
-        android:layout_marginTop="9dp"
-        android:background="@android:color/transparent"
-        android:drawableLeft="@drawable/pause_ic"
-        android:text="pause"
-        android:textColor="#F355D8"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
         tools:visibility="visible" />
 

@@ -21,7 +21,7 @@ import com.example.pomodoro.databinding.ActivityHomeBinding;
 
 public class home extends AppCompatActivity {
 
-    
+
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomeBinding binding;
