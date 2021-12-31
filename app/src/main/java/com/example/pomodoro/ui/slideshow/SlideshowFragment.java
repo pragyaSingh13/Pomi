@@ -315,7 +315,7 @@ public class SlideshowFragment extends Fragment {
                 Map<String, Object> mapk = new HashMap<>();
                 for (Map.Entry<String,String> entry : sortedMap.entrySet()){
                     mapEnt = entry;
-                    mapEnt.setValue("LT"+mapEnt.getValue());
+                    mapEnt.setValue("Long Term-"+mapEnt.getValue());
                     if(i==position)
                         break;
                     i++;

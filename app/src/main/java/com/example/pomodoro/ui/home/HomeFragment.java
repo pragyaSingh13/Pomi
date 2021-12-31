@@ -265,7 +265,7 @@ public class HomeFragment extends Fragment {
                 Date date = new Date();
                 SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy");
                 String str = formatter.format(date);
-                String result = "RT"+editText.getText().toString();
+                String result = editText.getText().toString();
                 Map<String, Object> entMap = new HashMap<>();
                 entMap.put(str,(Object)result);
                 dbRef.updateChildren(entMap);
