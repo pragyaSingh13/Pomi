@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,7 +52,8 @@ public class AboutFragment extends Fragment {
         if(isInternetAvailable()){
             errText.setVisibility(View.GONE);
             errview.setVisibility(View.GONE);
-            webView.loadUrl("https://apracticalteen.home.blog");
+            webView.setWebViewClient(new WebViewClient());
+            webView.loadUrl("http://apracticalteen.home.blog/2021/12/31/what-is-the-pomodoro-technique-of-getting-things-done/");
         }
         else{
             errview.setVisibility(View.VISIBLE);
