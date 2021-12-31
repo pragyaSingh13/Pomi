@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 import java.util.concurrent.ThreadLocalRandom;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -62,16 +64,38 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Button timButton = binding.timerBtn;;
+        TextView quoteView = binding.textView4;
+        DatabaseReference dataref = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("username");
         timButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setTimer(timButton);
             }
         });
+        dataref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                String username = (String) snapshot.getValue();
+                quoteView.setText("Welcome back "+username+"!!");
+                new CountDownTimer(6000,1000){
+                    @Override
+                    public void onTick(long millisUntilFinished) { }
+
+                    @Override
+                    public void onFinish() { }
+                };
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
         initQuotes();
-        //timerRun(binding.textView3);
+        continueTimer();
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -104,8 +128,18 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 List<String> quotes = (List<String>) snapshot.getValue();
-                int rand =  0 + (int)(Math.random() * (((quotes.size()-1 )- 0) + 1));
-                quoteView.setText("''" +quotes.get(rand)+"''");
+                Handler handler = new Handler();
+                final Runnable r = new Runnable() {
+                    public void run() {
+                        int rand =  0 + (int)(Math.random() * (((quotes.size()-1 )- 0) + 1));
+                        quoteView.setText("''" +quotes.get(rand)+"''");
+                        handler.postDelayed(this, 5000);
+                    }
+                };
+                handler.postDelayed(r, 5000);
+
+
+
             }
 
             @Override
@@ -116,6 +150,9 @@ public class HomeFragment extends Fragment {
     }
 
     void timerRun(TextView timerView, long millis,Button timbtn,String goal){
+        Button strtbtn = binding.timerBtn;
+        strtbtn.setVisibility(View.GONE);
+        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("timer");
         MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.tick);
         mp.setLooping(true);
         mp.start();
@@ -125,9 +162,12 @@ public class HomeFragment extends Fragment {
         pauseBtn.setVisibility(View.VISIBLE);
         stopBtn.setVisibility(View.VISIBLE);
         goalText.setText(goal);
-        initQuotes(millis*4);
+
         new CountDownTimer(millis,1000){
             public void onTick(long millisUntilFinished) {
+                Map<Object, Object> map = new HashMap<>();
+                map.put(goal,(Long) millisUntilFinished);
+                dataRef.setValue(map);
                 int seconds = (int) (millisUntilFinished/ 1000) % 60 ;
                 int minutes = (int) ((millisUntilFinished/ (1000*60)) % 60);
                 int hours   = (int) ((millisUntilFinished/ (1000*60*60)) % 24);
@@ -142,6 +182,9 @@ public class HomeFragment extends Fragment {
                 pauseBtn.setVisibility(View.GONE);
                 stopBtn.setVisibility(View.GONE);
                 timbtn.setVisibility(View.VISIBLE);
+                Map<Object,Object> map = new HashMap<>();
+                map.put(" ",0);
+                dataRef.setValue(map);
                 AlertDialog alert = getFinishAlert().create();
                 alert.show();
             }
@@ -227,31 +270,23 @@ public class HomeFragment extends Fragment {
         return dialogBuilder;
     }
 
-    void initQuotes(long time){
-        TextView quoteView = binding.textView4;
-        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("quotes");
-        if(!isInternetAvailable()){
-            Snackbar.make(getView(),"You're not connected to internet.",Snackbar.LENGTH_LONG).setBackgroundTint(Color.parseColor("#172949")).setTextColor((int)Color.WHITE).show();
 
-        }
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+    void continueTimer(){
+
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("users").child(curUser.getUid()).child("timer");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                List<String> quotes = (List<String>) snapshot.getValue();
-                new CountDownTimer(time,4000){
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        int rand =  0 + (int)(Math.random() * (((quotes.size()-1 )- 0) + 1));
-                        quoteView.setText("''" +quotes.get(rand)+"''");
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                    }
-                };
-
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot){
+                String goal=null;
+                Long time = null;
+                Map<String, Long> map = (Map<String, Long>) snapshot.getValue();
+                for (Map.Entry<String, Long> entry : map.entrySet()) {
+                     goal = entry.getKey();
+                     time = entry.getValue();
+                }
+                if(!map.containsValue(0)){
+                    timerRun(binding.textView3,time, binding.timerBtn, goal);
+                }
             }
 
             @Override
