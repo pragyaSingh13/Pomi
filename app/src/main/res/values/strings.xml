@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pomodori</string>
+    <string name="app_name">Pomi</string>
     <string name="title_activity_home">home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -9,7 +9,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Timer</string>
-    <string name="menu_gallery">Short-Term Goals</string>
+    <string name="menu_gallery">To-dos</string>
     <string name="menu_slideshow">Long-Term Goals</string>
     <string name="quote_menu">Add Quotes</string>
     <string name="recent_menu">Recent Achievements</string>
