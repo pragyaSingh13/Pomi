@@ -2,6 +2,7 @@ package com.example.pomodoro.ui.home;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -248,7 +250,9 @@ public class HomeFragment extends Fragment {
         EditText editText = new EditText(dialogBuilder.getContext());
         TextView titleView  = new TextView(dialogBuilder.getContext());
         GifImageView gifImageView = new GifImageView(dialogBuilder.getContext());
+        ImageButton shareButton = new ImageButton(dialogBuilder.getContext());
         Button stopButton = binding.button;
+        shareButton.setImageResource(R.drawable.shareicon);
         stopButton.setVisibility(View.GONE);
         startbtn.setText("Log It");
         startbtn.setBackgroundColor((int) Color.RED);
@@ -273,12 +277,19 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(dialogBuilder.getContext(), "Good Job! Check your recents.", Toast.LENGTH_LONG).show();
             }
         });
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareResult(editText.getText().toString());
+            }
+        });
         lineL.setOrientation(LinearLayout.VERTICAL);
         lineL.setPadding(30,10,30,30);
         lineL.addView(titleView);
         lineL.addView(gifImageView);
         lineL.addView(editText);
         lineL.addView(startbtn);
+        lineL.addView(shareButton);
         gifImageView.setImageResource(R.drawable.hurray);
         dialogBuilder.setView(lineL);
         return dialogBuilder;
@@ -324,6 +335,20 @@ public class HomeFragment extends Fragment {
         databaseReference.setValue(map);
         AlertDialog finishAlert = getFinishAlert().create();
         finishAlert.show();
+
+    }
+
+    void shareResult(String result){
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        /*This will be the actual content you wish you share.*/
+        String shareBody = "Look what I've just achieved using Pomi app: "+result;
+        /*The type of the content is text, obviously.*/
+        intent.setType("text/plain");
+        /*Applying information Subject and Body.*/
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        /*Fire!*/
+        startActivity(Intent.createChooser(intent, getString(R.string.app_name)));
 
     }
 
